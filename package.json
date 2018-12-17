@@ -16,6 +16,10 @@
     "typescript": "^3.2.1"
   },
   "dependencies": {
-    "graphql-yoga": "^1.16.7"
+    "@types/eventemitter2": "^4.1.0",
+    "eventemitter2": "^5.0.1",
+    "graphql-yoga": "^1.16.7",
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.12"
   }
 }
