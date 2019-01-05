@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { bootstrapContainer } from './container'
-import { startServer } from './api/api'
+import { startServer } from './api/http'
 
 // Boot application
 ;(async () => {

@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/express-graphql": "^0.6.2",
+    "@types/graphql": "^14.0.4",
     "@types/node": "^10.12.18",
     "concurrently": "^4.1.0",
     "nodemon": "^1.18.9",
@@ -24,8 +26,11 @@
   "dependencies": {
     "@types/eventemitter2": "^4.1.0",
     "eventemitter2": "^5.0.1",
+    "express-graphql": "^0.7.1",
     "fastify": "^1.13.3",
     "fastify-helmet": "^3.0.0",
+    "graphql": "^14.0.2",
+    "graphql-tools": "^4.0.3",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.12"
   }
