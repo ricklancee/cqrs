@@ -1,6 +1,6 @@
 import { EventEmitter, EventEmitterBinding } from './EventEmitter'
 import { NodeEventEmitter } from './NodeEventEmitter'
-import { ServiceProvider } from '../../container'
+import { ServiceProvider } from '../IOCProvider'
 
 export class EventEmitterServiceProvider extends ServiceProvider {
     public register() {

@@ -1,9 +1,10 @@
 import 'reflect-metadata'
 import { bootstrapContainer } from './container'
-import { EventEmitterServiceProvider } from './core/EventEmitter/EventEmitterServiceProvider'
+import { startServer } from './api/api'
 
 // Boot application
 ;(async () => {
     console.log('Starting application...')
-    await bootstrapContainer([EventEmitterServiceProvider])
+    await bootstrapContainer()
+    startServer()
 })()
