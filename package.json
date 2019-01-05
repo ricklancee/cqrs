@@ -6,19 +6,24 @@
   "scripts": {
     "watch:ts": "tsc -w",
     "start:debug": "nodemon --inspect ./dist/server.js",
-    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch:ts\" \"npm run start:debug\""
+    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch:ts\" \"npm run start:debug\"",
+    "lint": "tslint ./src/**/*.ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^10.12.18",
     "concurrently": "^4.1.0",
-    "nodemon": "^1.18.7",
-    "typescript": "^3.2.1"
+    "nodemon": "^1.18.9",
+    "prettier": "^1.15.3",
+    "tslint": "^5.12.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.2.2"
   },
   "dependencies": {
     "@types/eventemitter2": "^4.1.0",
     "eventemitter2": "^5.0.1",
-    "graphql-yoga": "^1.16.7",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.12"
   }
