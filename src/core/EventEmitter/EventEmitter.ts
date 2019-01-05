@@ -1,5 +1,5 @@
 export interface EventListener {
-    (...values: any[]): void;
+    (...values: any[]): void
 }
 
 export interface EventEmitter {

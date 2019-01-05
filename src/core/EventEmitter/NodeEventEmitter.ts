@@ -1,6 +1,6 @@
-import { EventEmitter } from "./EventEmitter"
+import { EventEmitter } from './EventEmitter'
 import { EventEmitter2 } from 'eventemitter2'
-import { injectable } from "inversify";
+import { injectable } from 'inversify'
 
 @injectable()
 export class NodeEventEmitter implements EventEmitter {
@@ -9,8 +9,8 @@ export class NodeEventEmitter implements EventEmitter {
     public constructor() {
         this.emitter = new EventEmitter2({
             wildcard: true,
-            delimiter: ':', 
-        });
+            delimiter: ':',
+        })
     }
 
     public on(event: string | string[], listener: EventListener): this {

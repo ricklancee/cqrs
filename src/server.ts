@@ -1,12 +1,9 @@
+import 'reflect-metadata'
+import { bootstrapContainer } from './container'
+import { EventEmitterServiceProvider } from './core/EventEmitter/EventEmitterServiceProvider'
 
-import "reflect-metadata";
-import { startServer } from "./grapql";
-import { bootstrapContainer } from "./container";
-import { EventEmitterServiceProvider } from "./EventEmitter/EventEmitterServiceProvider";
-
+// Boot application
 ;(async () => {
-    await bootstrapContainer([
-        EventEmitterServiceProvider
-    ])
-    startServer()
+    console.log('Starting application...')
+    await bootstrapContainer([EventEmitterServiceProvider])
 })()
