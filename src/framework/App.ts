@@ -1,6 +1,9 @@
-import { HttpServerOptions } from './Http/HttpServer'
+import { HttpServerOptions, HttpServer } from './Http/HttpServer'
 import { Container, interfaces } from 'inversify'
 import { NewableServiceProvider, ProvidesService } from './ServiceProvider'
+import { Kernel, KernelBinding } from './Kernel'
+import { HttpKernel } from './Http/HttpKernel'
+import { GraphQLOptions } from './GraphQL/GraphQL'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -10,9 +13,19 @@ export const enum ApplicationEnvironment {
 export interface ApplicationConfig {
     readonly env: ApplicationEnvironment
     readonly http: HttpServerOptions
+    readonly graphql: GraphQLOptions
 }
 
 export const ApplicationConfigBinding = Symbol.for('ApplicationConfigBinding')
+export const IoCBinding = Symbol.for('IoCBinding')
+
+export type MakeFN = <T>(
+    serviceIdentifier: interfaces.ServiceIdentifier<T>
+) => T
+
+interface NewableKernel {
+    new (...args: any[]): HttpKernel
+}
 
 export class Application {
     private readonly container: Container
@@ -25,7 +38,11 @@ export class Application {
             .bind<ApplicationConfig>(ApplicationConfigBinding)
             .toConstantValue(config)
 
-        this.make = this.container.get.bind(this.container)
+        const make = this.container.get.bind(this.container)
+
+        this.container.bind(IoCBinding).toConstantValue(make)
+
+        this.make = make
     }
 
     public register(providers: NewableServiceProvider[]) {
@@ -38,12 +55,39 @@ export class Application {
         })
     }
 
-    public async boot(callback: () => void) {
+    public kernel(kernel: NewableKernel) {
+        this.container
+            .bind<Kernel>(KernelBinding)
+            .to(kernel)
+            .inSingletonScope()
+    }
+
+    public async boot(callback?: () => void) {
         for (const provider of this.providers) {
             await provider.register()
         }
-        await callback()
+
+        const cb = callback
+            ? callback
+            : () => {
+                  /** noop */
+                  // tslint:disable-next-line:ter-indent
+              }
+
+        await this.getKernel().boot(cb)
     }
 
-    public make: <T>(serviceIdentifier: interfaces.ServiceIdentifier<T>) => T
+    public make: MakeFN
+
+    private getKernel() {
+        try {
+            return this.container.get<Kernel>(KernelBinding)
+        } catch (err) {
+            throw new Error(
+                `Cannot find registered kernel class, reason:\n\t"${
+                    err.message
+                }"\n\tPossible solution: Has the kernel class been registered to the application?`
+            )
+        }
+    }
 }

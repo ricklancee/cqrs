@@ -1,23 +1,24 @@
-import { makeExecutableSchema } from 'graphql-tools'
 import { AppError } from '../framework/AppError'
 
 export const typeDefs = `
   type Query {
-    hello(foo: String): String
+    hello: String
+    expectedError: String
+    reportedError: String
   }
 `
 
 // The root provides a resolver function for each API endpoint
-const resolvers = {
+export const resolvers = {
     Query: {
         hello: () => {
-            throw new AppError('bad hello', 'NOT_VALID')
             return 'Hello world!'
+        },
+        expectedError: () => {
+            throw new AppError('Error!', 'NOT_VALID')
+        },
+        reportedError: () => {
+            throw new Error('Should be masked!')
         },
     },
 }
-
-export const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-})

@@ -12,6 +12,10 @@ export class HttpServerServiceProvider extends ServiceProvider {
         this.container
             .bind<HttpServerOptions>(HttpServerOptionsBinding)
             .toConstantValue(this.config.http)
-        this.container.bind<HttpServer>(HttpServerBinding).to(FastifyHttpServer)
+
+        this.container
+            .bind<HttpServer>(HttpServerBinding)
+            .to(FastifyHttpServer)
+            .inSingletonScope()
     }
 }
