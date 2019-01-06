@@ -1,4 +1,5 @@
 import { makeExecutableSchema } from 'graphql-tools'
+import { AppError } from '../framework/AppError'
 
 export const typeDefs = `
   type Query {
@@ -10,7 +11,7 @@ export const typeDefs = `
 const resolvers = {
     Query: {
         hello: () => {
-            throw new Error('AAAAAAAAAh')
+            throw new AppError('bad hello', 'NOT_VALID')
             return 'Hello world!'
         },
     },

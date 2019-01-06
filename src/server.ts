@@ -1,10 +1,23 @@
 import 'reflect-metadata'
-import { bootstrapContainer } from './container'
-import { startServer } from './api/http'
+import { Application, ApplicationEnvironment } from './framework/App'
+import { EventEmitterServiceProvider } from './framework/EventEmitter/EventEmitterServiceProvider'
+import { HttpServerServiceProvider } from './framework/Http/HttpServerServiceProvider'
+import { startServer } from './app/http'
 
-// Boot application
-;(async () => {
-    console.log('Starting application...')
-    await bootstrapContainer()
-    startServer()
-})()
+const app = new Application({
+    env: ApplicationEnvironment.development,
+    http: {
+        port: 3000,
+    },
+})
+
+app.register([EventEmitterServiceProvider, HttpServerServiceProvider])
+
+// app.kernel(HttpKernel)
+// app.kernel(ConsoleKernel)
+
+app.boot(async () => {
+    await startServer()
+})
+
+export { app }
