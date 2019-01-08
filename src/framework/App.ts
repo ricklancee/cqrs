@@ -1,5 +1,5 @@
-import { HttpServerOptions, HttpServer } from './Http/HttpServer'
-import { Container, interfaces } from 'inversify'
+import { HttpServerOptions } from './Http/HttpServer'
+import { Container, injectable } from 'inversify'
 import { NewableServiceProvider, ProvidesService } from './ServiceProvider'
 import { Kernel, KernelBinding } from './Kernel'
 import { HttpKernel } from './Http/HttpKernel'
@@ -17,16 +17,13 @@ export interface ApplicationConfig {
 }
 
 export const ApplicationConfigBinding = Symbol.for('ApplicationConfigBinding')
-export const IoCBinding = Symbol.for('IoCBinding')
-
-export type MakeFN = <T>(
-    serviceIdentifier: interfaces.ServiceIdentifier<T>
-) => T
+export const AppBinding = Symbol.for('AppBinding')
 
 interface NewableKernel {
     new (...args: any[]): HttpKernel
 }
 
+@injectable()
 export class Application {
     private readonly container: Container
     private readonly providers = new Set<ProvidesService>()
@@ -38,11 +35,7 @@ export class Application {
             .bind<ApplicationConfig>(ApplicationConfigBinding)
             .toConstantValue(config)
 
-        const make = this.container.get.bind(this.container)
-
-        this.container.bind(IoCBinding).toConstantValue(make)
-
-        this.make = make
+        this.container.bind(AppBinding).toConstantValue(this)
     }
 
     public register(providers: NewableServiceProvider[]) {
@@ -76,8 +69,6 @@ export class Application {
 
         await this.getKernel().boot(cb)
     }
-
-    public make: MakeFN
 
     private getKernel() {
         try {

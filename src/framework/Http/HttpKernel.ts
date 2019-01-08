@@ -1,15 +1,17 @@
 import { Kernel, BootCallback } from '../Kernel'
 import { injectable, inject } from 'inversify'
 import { HttpServer, HttpServerBinding } from './HttpServer'
-import { HttpMiddleware, NewableHttpMiddleware } from './HttpMiddleware'
-import { IoCBinding, MakeFN } from '../App'
+import { HttpMiddleware } from './HttpMiddleware'
+import { AppBinding, Application } from '../App'
 
 @injectable()
-export abstract class HttpKernel implements Kernel {
+export abstract class HttpKernel extends Kernel {
     constructor(
         @inject(HttpServerBinding) private server: HttpServer,
-        @inject(IoCBinding) private make: MakeFN
-    ) {}
+        @inject(AppBinding) private app: Application
+    ) {
+        super()
+    }
 
     protected middleware: symbol[] = []
 
@@ -17,7 +19,7 @@ export abstract class HttpKernel implements Kernel {
         console.log('Booting http kernel')
 
         for (const middleware of this.middleware) {
-            const instance = this.make<HttpMiddleware>(middleware)
+            const instance = this.app.make<HttpMiddleware>(middleware)
             this.server.use(instance.onRoute, instance.run.bind(instance))
         }
 

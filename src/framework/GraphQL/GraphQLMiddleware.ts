@@ -9,6 +9,10 @@ import {
 import { GraphQLError } from 'graphql'
 import graphqlHTTP from 'express-graphql'
 import { Request, Response } from 'express'
+import {
+    ExpectionHandler as ExecptionHandler,
+    ExpectionHandlerBinding as ExecptionHandlerBinding,
+} from '../ExceptionHandler/ExceptionHandler'
 
 export const GraphQLMiddlewareBinding = Symbol.for('GraphQLMiddlewareBinding')
 
@@ -20,7 +24,9 @@ export class GraphQLMiddleware implements HttpMiddleware {
 
     constructor(
         @inject(GraphQLOptionsBinding) private options: GraphQLOptions,
-        @inject(GraphQLBinding) private graphql: GraphQL
+        @inject(GraphQLBinding) private graphql: GraphQL,
+        @inject(ExecptionHandlerBinding)
+        private expectionHandler: ExecptionHandler
     ) {
         const schema = this.graphql.getSchema()
         this.onRoute = this.options.pathname
@@ -31,7 +37,7 @@ export class GraphQLMiddleware implements HttpMiddleware {
                 request,
             },
             formatError: (error: GraphQLError) => {
-                return this.formatError(error)
+                return this.maskError(error)
             },
             extensions: async info => {
                 if (info.result && info.result.errors) {
@@ -52,11 +58,13 @@ export class GraphQLMiddleware implements HttpMiddleware {
         return this.graphQLHTTPMiddleware(request, response)
     }
 
-    private reportErrors(errors: Error[]) {
-        console.log('REPORT THIS', errors)
+    private async reportErrors(errors: Error[]) {
+        await Promise.all(
+            errors.map(error => this.expectionHandler.report(error))
+        )
     }
 
-    private formatError(error: GraphQLError) {
+    private maskError(error: GraphQLError) {
         if (!error.originalError) {
             return error
         }
