@@ -10,8 +10,8 @@ import { GraphQLError } from 'graphql'
 import graphqlHTTP from 'express-graphql'
 import { Request, Response } from 'express'
 import {
-    ExpectionHandler as ExecptionHandler,
-    ExpectionHandlerBinding as ExecptionHandlerBinding,
+    ExceptionHandler,
+    ExceptionHandlerBinding,
 } from '../ExceptionHandler/ExceptionHandler'
 
 export const GraphQLMiddlewareBinding = Symbol.for('GraphQLMiddlewareBinding')
@@ -25,8 +25,8 @@ export class GraphQLMiddleware implements HttpMiddleware {
     constructor(
         @inject(GraphQLOptionsBinding) private options: GraphQLOptions,
         @inject(GraphQLBinding) private graphql: GraphQL,
-        @inject(ExecptionHandlerBinding)
-        private expectionHandler: ExecptionHandler
+        @inject(ExceptionHandlerBinding)
+        private expectionHandler: ExceptionHandler
     ) {
         const schema = this.graphql.getSchema()
         this.onRoute = this.options.pathname

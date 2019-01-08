@@ -4,6 +4,12 @@ import { NewableServiceProvider, ProvidesService } from './ServiceProvider'
 import { Kernel, KernelBinding } from './Kernel'
 import { HttpKernel } from './Http/HttpKernel'
 import { GraphQLOptions } from './GraphQL/GraphQL'
+import { Logger, LoggerBinding } from './Logger/Logger'
+import { ConsoleLogger } from './Logger/ConsoleLogger'
+import {
+    ExceptionHandler,
+    ExceptionHandlerBinding,
+} from './ExceptionHandler/ExceptionHandler'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -36,6 +42,16 @@ export class Application {
             .toConstantValue(config)
 
         this.container.bind(AppBinding).toConstantValue(this)
+
+        this.container
+            .bind<Logger>(LoggerBinding)
+            .to(ConsoleLogger)
+            .inSingletonScope()
+
+        this.container
+            .bind<ExceptionHandler>(ExceptionHandlerBinding)
+            .to(ExceptionHandler)
+            .inSingletonScope()
     }
 
     public register(providers: NewableServiceProvider[]) {

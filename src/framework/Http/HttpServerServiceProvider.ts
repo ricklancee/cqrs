@@ -5,7 +5,7 @@ import {
     HttpServerOptionsBinding,
     HttpServerOptions,
 } from './HttpServer'
-import { FastifyHttpServer } from './FastifyHttpServer'
+import { ExpressHttpServer } from './ExpressHttpServer'
 
 export class HttpServerServiceProvider extends ServiceProvider {
     public register() {
@@ -15,7 +15,7 @@ export class HttpServerServiceProvider extends ServiceProvider {
 
         this.container
             .bind<HttpServer>(HttpServerBinding)
-            .to(FastifyHttpServer)
+            .to(ExpressHttpServer)
             .inSingletonScope()
     }
 }

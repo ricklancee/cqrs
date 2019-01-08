@@ -6,7 +6,7 @@ export class ExceptionHandler {
     constructor(@inject(LoggerBinding) private logger: Logger) {}
 
     public report(error: Error): Promise<void> | void {
-        this.logger.error(error.toString())
+        this.logger.error(error.stack)
     }
 }
 

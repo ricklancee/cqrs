@@ -1,20 +1,22 @@
 import { Logger, LogMetaData } from './Logger'
+import { injectable } from 'inversify'
 
+@injectable()
 export class ConsoleLogger implements Logger {
     public debug(message: string, metaData?: LogMetaData): void {
         this.logMessage('DEBUG', message, metaData)
     }
 
     public info(message: string, metaData?: LogMetaData): void {
-        this.logMessage('DEBUG', message, metaData)
+        this.logMessage('INFO', message, metaData)
     }
 
     public warn(message: string, metaData?: LogMetaData): void {
-        this.logMessage('DEBUG', message, metaData)
+        this.logMessage('WARN', message, metaData)
     }
 
     public error(message: string, metaData?: LogMetaData): void {
-        this.logMessage('DEBUG', message, metaData)
+        this.logMessage('ERROR', message, metaData)
     }
 
     private logMessage(type: string, message: string, metaData?: LogMetaData) {

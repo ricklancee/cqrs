@@ -3,6 +3,7 @@ import {
     ExceptionHandlerBinding,
     ExceptionHandler,
 } from './ExceptionHandler/ExceptionHandler'
+import { LoggerBinding, Logger } from './Logger/Logger'
 
 export const KernelBinding = Symbol.for('KernelBinding')
 
@@ -17,22 +18,50 @@ export abstract class Kernel implements Boots {
     @inject(ExceptionHandlerBinding)
     private exceptionHandler: ExceptionHandler
 
+    @inject(LoggerBinding)
+    protected logger: Logger
+
+    constructor() {
+        this.registerErrorEvents()
+        this.registerExitEvents()
+    }
+
     public boot(callback: BootCallback) {
-        this.registerProcesses()
+        /** noop */
+    }
+
+    protected onError(error: Error): Promise<void> | void {
+        /** noop */
+    }
+
+    protected onExit(signal: string): Promise<void> | void {
+        /** noop */
     }
 
     protected async report(error: Error) {
+        await this.onError(error)
         await this.exceptionHandler.report(error)
     }
 
-    private registerProcesses() {
-        process.on('uncaughtException', async (error: Error) => {
-            await this.report(error)
-            process.exit()
-        })
-        process.on('unhandledRejection', async (error: Error) => {
-            await this.report(error)
-            process.exit()
-        })
+    private async handleShutDown(signal: string) {
+        this.logger.info(`Recieved [${signal}] shutting down program...`)
+        await this.onExit(signal)
+        process.kill(process.pid, signal)
+    }
+
+    private registerExitEvents() {
+        process.once('SIGINT', () => this.handleShutDown('SIGINT'))
+        process.once('SIGTERM', () => this.handleShutDown('SIGTERM'))
+        process.once('SIGUSR2', () => this.handleShutDown('SIGUSR2'))
+    }
+
+    private registerErrorEvents() {
+        process.on('uncaughtException', this.handleException)
+        process.on('unhandledRejection', this.handleException)
+    }
+
+    private handleException = async (error: Error) => {
+        await this.report(error)
+        process.exit()
     }
 }
