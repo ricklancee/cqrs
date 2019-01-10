@@ -11,7 +11,8 @@ export const typeDefs = `
 // The root provides a resolver function for each API endpoint
 export const resolvers = {
     Query: {
-        hello: () => {
+        hello: (root, args, context) => {
+            console.log(context)
             return 'Hello world!'
         },
         expectedError: () => {

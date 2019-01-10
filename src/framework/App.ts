@@ -1,5 +1,5 @@
 import { HttpServerOptions } from './Http/HttpServer'
-import { Container, injectable } from 'inversify'
+import { Container, injectable, interfaces } from 'inversify'
 import { NewableServiceProvider, ProvidesService } from './ServiceProvider'
 import { Kernel, KernelBinding } from './Kernel'
 import { HttpKernel } from './Http/HttpKernel'
@@ -10,6 +10,7 @@ import {
     ExceptionHandler,
     ExceptionHandlerBinding,
 } from './ExceptionHandler/ExceptionHandler'
+import { Newable } from './Newable'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -25,9 +26,7 @@ export interface ApplicationConfig {
 export const ApplicationConfigBinding = Symbol.for('ApplicationConfigBinding')
 export const AppBinding = Symbol.for('AppBinding')
 
-interface NewableKernel {
-    new (...args: any[]): HttpKernel
-}
+type MakeFN = <T>(serviceIdentifier: interfaces.ServiceIdentifier<T>) => T
 
 @injectable()
 export class Application {
@@ -40,6 +39,8 @@ export class Application {
         this.container
             .bind<ApplicationConfig>(ApplicationConfigBinding)
             .toConstantValue(config)
+
+        this.make = this.container.get.bind(this.container)
 
         this.container.bind(AppBinding).toConstantValue(this)
 
@@ -64,7 +65,9 @@ export class Application {
         })
     }
 
-    public kernel(kernel: NewableKernel) {
+    public make: MakeFN
+
+    public kernel(kernel: Newable<Kernel>) {
         this.container
             .bind<Kernel>(KernelBinding)
             .to(kernel)

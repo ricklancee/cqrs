@@ -15,13 +15,12 @@ export interface Boots {
 
 @injectable()
 export abstract class Kernel implements Boots {
-    @inject(ExceptionHandlerBinding)
-    private exceptionHandler: ExceptionHandler
-
-    @inject(LoggerBinding)
-    protected logger: Logger
-
-    constructor() {
+    constructor(
+        @inject(LoggerBinding)
+        protected logger: Logger,
+        @inject(ExceptionHandlerBinding)
+        private exceptionHandler: ExceptionHandler
+    ) {
         this.registerErrorEvents()
         this.registerExitEvents()
     }
@@ -30,18 +29,11 @@ export abstract class Kernel implements Boots {
         /** noop */
     }
 
-    protected onError(error: Error): Promise<void> | void {
-        /** noop */
-    }
-
     protected onExit(signal: string): Promise<void> | void {
         /** noop */
     }
 
-    protected async report(error: Error) {
-        await this.onError(error)
-        await this.exceptionHandler.report(error)
-    }
+    public report(error: Error) {}
 
     private async handleShutDown(signal: string) {
         this.logger.info(`Recieved [${signal}] shutting down program...`)
@@ -58,10 +50,11 @@ export abstract class Kernel implements Boots {
     private registerErrorEvents() {
         process.on('uncaughtException', this.handleException)
         process.on('unhandledRejection', this.handleException)
+        this.exceptionHandler.onError(error => this.report(error))
     }
 
     private handleException = async (error: Error) => {
-        await this.report(error)
+        await this.exceptionHandler.report(error)
         process.exit()
     }
 }

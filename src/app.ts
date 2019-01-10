@@ -5,6 +5,7 @@ import { HttpServerServiceProvider } from './framework/Http/HttpServerServicePro
 import { Kernel } from './app/Kernel'
 import { GraphQLServiceProvider } from './framework/GraphQL/GraphQLServiceProvider'
 import { typeDefs, resolvers } from './app/graphql'
+import { AppServiceProvider } from './app/AppServiceProvider'
 
 const app = new Application({
     env: ApplicationEnvironment.development,
@@ -19,6 +20,7 @@ const app = new Application({
 })
 
 app.register([
+    AppServiceProvider,
     EventEmitterServiceProvider,
     GraphQLServiceProvider,
     HttpServerServiceProvider,

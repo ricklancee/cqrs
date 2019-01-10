@@ -12,6 +12,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@types/cors": "^2.8.4",
         "@types/express": "^4.16.0",
         "@types/express-graphql": "^0.6.2",
         "@types/graphql": "^14.0.4",
@@ -27,6 +28,7 @@
     },
     "dependencies": {
         "@types/eventemitter2": "^4.1.0",
+        "cors": "^2.8.5",
         "eventemitter2": "^5.0.1",
         "express": "^4.16.4",
         "express-graphql": "^0.7.1",

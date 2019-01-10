@@ -14,11 +14,13 @@ import {
     ExceptionHandlerBinding,
 } from '../ExceptionHandler/ExceptionHandler'
 
-export const GraphQLMiddlewareBinding = Symbol.for('GraphQLMiddlewareBinding')
+interface Context {
+    [key: string]: any
+}
 
 @injectable()
-export class GraphQLMiddleware implements HttpMiddleware {
-    public onRoute: string
+export abstract class GraphQLMiddleware implements HttpMiddleware {
+    public pathname: string = '/graphql'
 
     private graphQLHTTPMiddleware: graphqlHTTP.Middleware
 
@@ -29,13 +31,13 @@ export class GraphQLMiddleware implements HttpMiddleware {
         private expectionHandler: ExceptionHandler
     ) {
         const schema = this.graphql.getSchema()
-        this.onRoute = this.options.pathname
+
+        this.pathname = this.options.pathname
+
         this.graphQLHTTPMiddleware = graphqlHTTP(request => ({
             schema,
             graphiql: true,
-            context: {
-                request,
-            },
+            context: this.setContext(request),
             formatError: (error: GraphQLError) => {
                 return this.maskError(error)
             },
@@ -54,7 +56,13 @@ export class GraphQLMiddleware implements HttpMiddleware {
         }))
     }
 
-    public run(request: Request, response: Response) {
+    protected setContext(request: Request): Context {
+        return {
+            request,
+        }
+    }
+
+    public handle(request: Request, response: Response) {
         return this.graphQLHTTPMiddleware(request, response)
     }
 
@@ -64,7 +72,7 @@ export class GraphQLMiddleware implements HttpMiddleware {
         )
     }
 
-    private maskError(error: GraphQLError) {
+    protected maskError(error: GraphQLError) {
         if (!error.originalError) {
             return error
         }

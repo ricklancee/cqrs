@@ -1,11 +1,8 @@
-import { RequestHandler, IRouterMatcher, ErrorRequestHandler } from 'express'
-import {
-    ApplicationRequestHandler,
-    RequestHandlerParams,
-} from 'express-serve-static-core'
+import { ApplicationRequestHandler } from 'express-serve-static-core'
 
 export interface HttpServerOptions {
     port: number
+    trustProxy?: boolean
 }
 
 export const HttpServerBinding = Symbol.for('HttpServerBinding')
@@ -15,11 +12,5 @@ export type StartCallback = (addres: string) => void
 
 export interface HttpServer {
     use: ApplicationRequestHandler<this>
-
-    get: IRouterMatcher<this>
-    post: IRouterMatcher<this>
-    put: IRouterMatcher<this>
-    delete: IRouterMatcher<this>
-
     start(callback: StartCallback): Promise<void> | void
 }
