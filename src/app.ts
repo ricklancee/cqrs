@@ -33,7 +33,7 @@ app.register([
 app.kernel(Kernel)
 
 app.boot(() => {
-    throw new Error()
+    app.log().info('Booted')
 })
 
 export { app }

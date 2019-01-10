@@ -4,6 +4,8 @@ import { NewableServiceProvider, ProvidesService } from './ServiceProvider'
 import { Kernel, KernelBinding } from './Kernel'
 import { GraphQLOptions } from './GraphQL/GraphQL'
 import { Newable } from './Newable'
+import { LoggerBinding, Logger } from './Logger/Logger'
+import { EventEmitterBinding, EventEmitter } from './EventEmitter/EventEmitter'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -26,6 +28,9 @@ export class Application {
     private readonly container: Container
     private readonly providers = new Set<ProvidesService>()
 
+    public log = () => this.container.get<Logger>(LoggerBinding)
+    public event = () => this.container.get<EventEmitter>(EventEmitterBinding)
+
     constructor(config: ApplicationConfig) {
         this.container = new Container()
 
@@ -36,6 +41,10 @@ export class Application {
         this.make = this.container.get.bind(this.container)
 
         this.container.bind(AppBinding).toConstantValue(this)
+    }
+
+    public config(): ApplicationConfig {
+        return this.container.get<ApplicationConfig>(ApplicationConfigBinding)
     }
 
     public register(providers: NewableServiceProvider[]) {
