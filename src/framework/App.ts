@@ -6,6 +6,7 @@ import { GraphQLOptions } from './GraphQL/GraphQL'
 import { Newable } from './Newable'
 import { LoggerBinding, Logger } from './Logger/Logger'
 import { EventEmitterBinding, EventEmitter } from './EventEmitter/EventEmitter'
+import { Router, RouterBinding } from './Http/Router'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -30,6 +31,7 @@ export class Application {
 
     public log = () => this.container.get<Logger>(LoggerBinding)
     public event = () => this.container.get<EventEmitter>(EventEmitterBinding)
+    public router = () => this.container.get<Router>(RouterBinding)
 
     constructor(config: ApplicationConfig) {
         this.container = new Container()

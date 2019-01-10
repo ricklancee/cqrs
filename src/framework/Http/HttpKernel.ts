@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from 'express'
 import { HttpMiddleware } from './HttpMiddleware'
 import { Newable } from '../Newable'
 import { Application, AppBinding } from '../App'
+import { RouterBinding, Router } from './Router'
 
 @injectable()
 export abstract class HttpKernel extends Kernel {
@@ -14,7 +15,12 @@ export abstract class HttpKernel extends Kernel {
     @inject(AppBinding)
     private application: Application
 
+    @inject(RouterBinding)
+    private router: Router
+
     protected middleware: Newable<HttpMiddleware>[] = []
+
+    protected routes: string[] = []
 
     public boot(callback: BootCallback) {
         // Register middleware into the server
@@ -25,6 +31,27 @@ export abstract class HttpKernel extends Kernel {
                 middleware.handle(req, res, next)
             })
         }
+
+        for (const route of this.routes) {
+            require(route)
+        }
+
+        for (const [methodType, handlers] of Object.entries(
+            this.router.routes
+        )) {
+            const method = methodType.toLowerCase()
+            if (method in this.server) {
+                for (const handler of handlers) {
+                    if (method === 'use') {
+                        this.server[method](handler.handler)
+                    } else {
+                        this.server[method](handler.pathname, handler.handler)
+                    }
+                }
+            }
+        }
+
+        console.log(this.router)
 
         // This is the error handler and should be the last middleware
         this.server.use(

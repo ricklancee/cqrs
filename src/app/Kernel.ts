@@ -14,6 +14,8 @@ export class Kernel extends HttpKernel {
         GraphQLMiddleware,
     ]
 
+    protected routes = [`${__dirname}/routes`]
+
     public report(error: Error) {
         // Implement reactions on an error like logging to sentry
         console.log('Kernel error', error)
