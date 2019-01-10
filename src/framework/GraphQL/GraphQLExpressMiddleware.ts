@@ -19,7 +19,7 @@ interface Context {
 }
 
 @injectable()
-export abstract class GraphQLMiddleware implements HttpMiddleware {
+export abstract class GraphQLExpressMiddleware implements HttpMiddleware {
     public pathname: string = '/graphql'
 
     private graphQLHTTPMiddleware: graphqlHTTP.Middleware

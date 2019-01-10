@@ -1,11 +1,11 @@
 import { ServiceProvider } from '../framework/ServiceProvider'
-import { GraphQL } from './Middleware/GraphQL'
+import { GraphQLMiddleware } from './Middleware/GraphQLMiddleware'
 
 export class AppServiceProvider extends ServiceProvider {
     register() {
         this.container
-            .bind<GraphQL>(GraphQL)
-            .to(GraphQL)
+            .bind<GraphQLMiddleware>(GraphQLMiddleware)
+            .to(GraphQLMiddleware)
             .inSingletonScope()
     }
 }

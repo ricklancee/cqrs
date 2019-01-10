@@ -4,14 +4,14 @@ import { SecurityHeadersMiddleware } from '../framework/Http/Middleware/Security
 import { CorsMiddleware } from '../framework/Http/Middleware/CorsMiddleware'
 import { Newable } from '../framework/Newable'
 import { HttpMiddleware } from '../framework/Http/HttpMiddleware'
-import { GraphQL } from './Middleware/GraphQL'
+import { GraphQLMiddleware } from './Middleware/GraphQLMiddleware'
 
 @injectable()
 export class Kernel extends HttpKernel {
     protected middleware: Newable<HttpMiddleware>[] = [
         CorsMiddleware,
         SecurityHeadersMiddleware,
-        GraphQL,
+        GraphQLMiddleware,
     ]
 
     public report(error: Error) {
