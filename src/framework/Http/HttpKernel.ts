@@ -34,7 +34,7 @@ export abstract class HttpKernel extends Kernel {
                 res: Response,
                 next: NextFunction
             ) => {
-                await this.report(err)
+                await this.exceptionHandler.report(err)
                 res.status(500).send(':(')
             }
         )

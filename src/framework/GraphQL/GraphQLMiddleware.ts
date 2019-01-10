@@ -12,7 +12,7 @@ import { Request, Response } from 'express'
 import {
     ExceptionHandler,
     ExceptionHandlerBinding,
-} from '../ExceptionHandler/ExceptionHandler'
+} from '../Exception/ExceptionHandler'
 
 interface Context {
     [key: string]: any
@@ -39,6 +39,10 @@ export abstract class GraphQLMiddleware implements HttpMiddleware {
             graphiql: true,
             context: this.setContext(request),
             formatError: (error: GraphQLError) => {
+                if (!error.originalError) {
+                    return error
+                }
+
                 return this.maskError(error)
             },
             extensions: async info => {
@@ -63,7 +67,7 @@ export abstract class GraphQLMiddleware implements HttpMiddleware {
     }
 
     public handle(request: Request, response: Response) {
-        return this.graphQLHTTPMiddleware(request, response)
+        this.graphQLHTTPMiddleware(request, response)
     }
 
     private async reportErrors(errors: Error[]) {
@@ -73,13 +77,9 @@ export abstract class GraphQLMiddleware implements HttpMiddleware {
     }
 
     protected maskError(error: GraphQLError) {
-        if (!error.originalError) {
-            return error
-        }
-
         // Mask any error that does not have an extension
         if (!error.extensions) {
-            error.message = 'Something went wrong'
+            error.message = `Something went wrong`
         }
 
         return error

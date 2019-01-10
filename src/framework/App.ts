@@ -9,7 +9,7 @@ import { ConsoleLogger } from './Logger/ConsoleLogger'
 import {
     ExceptionHandler,
     ExceptionHandlerBinding,
-} from './ExceptionHandler/ExceptionHandler'
+} from './Exception/ExceptionHandler'
 import { Newable } from './Newable'
 
 export const enum ApplicationEnvironment {

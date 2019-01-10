@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify'
 import {
     ExceptionHandlerBinding,
     ExceptionHandler,
-} from './ExceptionHandler/ExceptionHandler'
+} from './Exception/ExceptionHandler'
 import { LoggerBinding, Logger } from './Logger/Logger'
 
 export const KernelBinding = Symbol.for('KernelBinding')
@@ -19,7 +19,7 @@ export abstract class Kernel implements Boots {
         @inject(LoggerBinding)
         protected logger: Logger,
         @inject(ExceptionHandlerBinding)
-        private exceptionHandler: ExceptionHandler
+        protected exceptionHandler: ExceptionHandler
     ) {
         this.registerErrorEvents()
         this.registerExitEvents()
