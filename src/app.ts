@@ -6,6 +6,8 @@ import { Kernel } from './app/Kernel'
 import { GraphQLServiceProvider } from './framework/GraphQL/GraphQLServiceProvider'
 import { typeDefs, resolvers } from './app/graphql'
 import { AppServiceProvider } from './app/AppServiceProvider'
+import { ExceptionServiceProvider } from './framework/Exception/ExceptionServiceProvider'
+import { LoggerServiceProvider } from './framework/Logger/LoggerServiceProvider'
 
 const app = new Application({
     env: ApplicationEnvironment.development,
@@ -21,6 +23,8 @@ const app = new Application({
 
 app.register([
     AppServiceProvider,
+    ExceptionServiceProvider,
+    LoggerServiceProvider,
     EventEmitterServiceProvider,
     GraphQLServiceProvider,
     HttpServerServiceProvider,
@@ -29,7 +33,7 @@ app.register([
 app.kernel(Kernel)
 
 app.boot(() => {
-    console.log('booted')
+    throw new Error()
 })
 
 export { app }

@@ -2,14 +2,7 @@ import { HttpServerOptions } from './Http/HttpServer'
 import { Container, injectable, interfaces } from 'inversify'
 import { NewableServiceProvider, ProvidesService } from './ServiceProvider'
 import { Kernel, KernelBinding } from './Kernel'
-import { HttpKernel } from './Http/HttpKernel'
 import { GraphQLOptions } from './GraphQL/GraphQL'
-import { Logger, LoggerBinding } from './Logger/Logger'
-import { ConsoleLogger } from './Logger/ConsoleLogger'
-import {
-    ExceptionHandler,
-    ExceptionHandlerBinding,
-} from './Exception/ExceptionHandler'
 import { Newable } from './Newable'
 
 export const enum ApplicationEnvironment {
@@ -43,16 +36,6 @@ export class Application {
         this.make = this.container.get.bind(this.container)
 
         this.container.bind(AppBinding).toConstantValue(this)
-
-        this.container
-            .bind<Logger>(LoggerBinding)
-            .to(ConsoleLogger)
-            .inSingletonScope()
-
-        this.container
-            .bind<ExceptionHandler>(ExceptionHandlerBinding)
-            .to(ExceptionHandler)
-            .inSingletonScope()
     }
 
     public register(providers: NewableServiceProvider[]) {
