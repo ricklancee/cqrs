@@ -1,4 +1,4 @@
-import { app } from '../app'
+import { app } from '../bootstrap/app'
 
 app.router().get('/foo', (request, response) => {
     console.log('fooo', request)

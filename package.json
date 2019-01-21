@@ -5,8 +5,9 @@
     "main": "index.js",
     "scripts": {
         "watch:ts": "tsc -w",
-        "start:debug": "nodemon --inspect ./dist/app.js",
+        "start:debug": "nodemon --inspect ./dist/bootstrap/app.js",
         "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch:ts\" \"npm run start:debug\"",
+        "cli": "tsc && node --inspect ./dist/bootstrap/console.js",
         "lint": "tslint ./src/**/*.ts"
     },
     "author": "",
@@ -27,8 +28,11 @@
         "typescript": "^3.2.2"
     },
     "dependencies": {
+        "@types/commander": "^2.12.2",
         "@types/eventemitter2": "^4.1.0",
+        "commander": "^2.19.0",
         "cors": "^2.8.5",
+        "dotenv": "^6.2.0",
         "eventemitter2": "^5.0.1",
         "express": "^4.16.4",
         "express-graphql": "^0.7.1",

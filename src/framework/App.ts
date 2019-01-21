@@ -2,11 +2,11 @@ import { HttpServerOptions } from './Http/HttpServer'
 import { Container, injectable, interfaces } from 'inversify'
 import { NewableServiceProvider, ProvidesService } from './ServiceProvider'
 import { Kernel, KernelBinding } from './Kernel'
-import { GraphQLOptions } from './GraphQL/GraphQL'
 import { Newable } from './Newable'
 import { LoggerBinding, Logger } from './Logger/Logger'
 import { EventEmitterBinding, EventEmitter } from './EventEmitter/EventEmitter'
 import { Router, RouterBinding } from './Http/Router'
+import { GraphQLOptions } from './GraphQL/GraphQLExpressMiddleware'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -25,7 +25,9 @@ export const AppBinding = Symbol.for('AppBinding')
 type MakeFN = <T>(serviceIdentifier: interfaces.ServiceIdentifier<T>) => T
 
 @injectable()
-export class Application {
+export class Application<
+    TExtendedAppConfig extends ApplicationConfig = ApplicationConfig
+> {
     private readonly container: Container
     private readonly providers = new Set<ProvidesService>()
 
@@ -33,11 +35,11 @@ export class Application {
     public event = () => this.container.get<EventEmitter>(EventEmitterBinding)
     public router = () => this.container.get<Router>(RouterBinding)
 
-    constructor(config: ApplicationConfig) {
+    constructor(config: TExtendedAppConfig) {
         this.container = new Container()
 
         this.container
-            .bind<ApplicationConfig>(ApplicationConfigBinding)
+            .bind<TExtendedAppConfig>(ApplicationConfigBinding)
             .toConstantValue(config)
 
         this.make = this.container.get.bind(this.container)
@@ -45,8 +47,8 @@ export class Application {
         this.container.bind(AppBinding).toConstantValue(this)
     }
 
-    public config(): ApplicationConfig {
-        return this.container.get<ApplicationConfig>(ApplicationConfigBinding)
+    public config(): TExtendedAppConfig {
+        return this.container.get<TExtendedAppConfig>(ApplicationConfigBinding)
     }
 
     public register(providers: NewableServiceProvider[]) {

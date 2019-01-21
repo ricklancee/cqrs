@@ -7,7 +7,7 @@ import { HttpMiddleware } from '../framework/Http/HttpMiddleware'
 import { GraphQLMiddleware } from './Middleware/GraphQLMiddleware'
 
 @injectable()
-export class Kernel extends HttpKernel {
+export class AppKernel extends HttpKernel {
     protected middleware: Newable<HttpMiddleware>[] = [
         CorsMiddleware,
         SecurityHeadersMiddleware,

@@ -25,9 +25,7 @@ export abstract class Kernel implements Boots {
         this.registerExitEvents()
     }
 
-    public boot(callback: BootCallback) {
-        /** noop */
-    }
+    public abstract boot(callback: BootCallback)
 
     protected onExit(signal: string): Promise<void> | void {
         /** noop */
