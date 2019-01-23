@@ -15,8 +15,6 @@ export abstract class Console extends Kernel {
     private application: Application
 
     public boot() {
-        console.log('starting console')
-
         commander.version(this.version)
 
         for (const Command of this.commands) {
@@ -31,5 +29,7 @@ export abstract class Console extends Kernel {
         if (!process.argv.slice(2).length) {
             commander.outputHelp()
         }
+
+        process.exit()
     }
 }

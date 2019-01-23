@@ -5,6 +5,7 @@ import { CorsMiddleware } from '../framework/Http/Middleware/CorsMiddleware'
 import { Newable } from '../framework/Newable'
 import { HttpMiddleware } from '../framework/Http/HttpMiddleware'
 import { GraphQLMiddleware } from './Middleware/GraphQLMiddleware'
+import { FooRoute } from './Routes/FooRoute'
 
 @injectable()
 export class AppKernel extends HttpKernel {
@@ -14,7 +15,7 @@ export class AppKernel extends HttpKernel {
         GraphQLMiddleware,
     ]
 
-    protected routes = [`${__dirname}/routes`]
+    protected routes = [FooRoute]
 
     public report(error: Error) {
         // Implement reactions on an error like logging to sentry
