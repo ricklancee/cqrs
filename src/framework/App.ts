@@ -1,12 +1,16 @@
 import { HttpServerOptions } from './Http/HttpServer'
 import { Container, injectable, interfaces } from 'inversify'
-import { NewableServiceProvider, ProvidesService } from './ServiceProvider'
+import {
+    NewableServiceProvider,
+    ProvidesService,
+} from './Container/ServiceProvider'
 import { Kernel, KernelBinding } from './Kernel'
 import { Newable } from './Newable'
 import { LoggerBinding, Logger } from './Logger/Logger'
 import { EventEmitterBinding, EventEmitter } from './EventEmitter/EventEmitter'
 import { Router, RouterBinding } from './Http/Router'
-import { GraphQLOptions } from './GraphQL/GraphQLExpressMiddleware'
+import { RedisOptions } from './Redis/RedisFactory'
+import { QueueOptions } from './Queue/Queue'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -16,7 +20,8 @@ export const enum ApplicationEnvironment {
 export interface ApplicationConfig {
     readonly env: ApplicationEnvironment
     readonly http: HttpServerOptions
-    readonly graphql: GraphQLOptions
+    readonly redis: RedisOptions
+    readonly queue: QueueOptions
 }
 
 export const ApplicationConfigBinding = Symbol.for('ApplicationConfigBinding')

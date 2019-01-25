@@ -1,4 +1,4 @@
-import { ServiceProvider } from '../ServiceProvider'
+import { ServiceProvider } from '../Container/ServiceProvider'
 import { Logger, LoggerBinding } from './Logger'
 import { ConsoleLogger } from './ConsoleLogger'
 

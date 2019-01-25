@@ -4,18 +4,16 @@ import { SecurityHeadersMiddleware } from '../framework/Http/Middleware/Security
 import { CorsMiddleware } from '../framework/Http/Middleware/CorsMiddleware'
 import { Newable } from '../framework/Newable'
 import { HttpMiddleware } from '../framework/Http/HttpMiddleware'
-import { GraphQLMiddleware } from './Middleware/GraphQLMiddleware'
-import { FooRoute } from './Routes/FooRoute'
+import { GraphQLRoute } from './Routes/GraphQLRoute'
 
 @injectable()
 export class AppKernel extends HttpKernel {
     protected middleware: Newable<HttpMiddleware>[] = [
         CorsMiddleware,
         SecurityHeadersMiddleware,
-        GraphQLMiddleware,
     ]
 
-    protected routes = [FooRoute]
+    protected routes = [GraphQLRoute]
 
     public report(error: Error) {
         // Implement reactions on an error like logging to sentry

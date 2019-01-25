@@ -35,7 +35,7 @@ export class Router {
         this.routes.OPTIONS.add({ pathname, handler })
     }
 
-    public use(handler: RequestHandler) {
-        this.routes.USE.add({ handler })
+    public use(pathname: string, handler: RequestHandler) {
+        this.routes.USE.add({ pathname, handler })
     }
 }

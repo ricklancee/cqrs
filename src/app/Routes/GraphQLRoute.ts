@@ -1,10 +1,10 @@
-import { GraphQLExpressMiddleware } from '../../framework/GraphQL/GraphQLExpressMiddleware'
+import { GraphQLHTTPRoute } from '../../framework/Http/Routes/GraphQLHTTPRoute'
 import { injectable } from 'inversify'
-import { Request } from 'express'
 import { typeDefs, resolvers } from '../graphql'
+import { Request } from 'express'
 
 @injectable()
-export class GraphQLMiddleware extends GraphQLExpressMiddleware {
+export class GraphQLRoute extends GraphQLHTTPRoute {
     protected createSchema() {
         return {
             typeDefs,

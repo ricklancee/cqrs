@@ -1,4 +1,4 @@
-import { ServiceProvider } from '../ServiceProvider'
+import { ServiceProvider } from '../Container/ServiceProvider'
 import { ExceptionHandler, ExceptionHandlerBinding } from './ExceptionHandler'
 
 export class ExceptionServiceProvider extends ServiceProvider {

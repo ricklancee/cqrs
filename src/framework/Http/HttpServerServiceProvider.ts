@@ -1,4 +1,4 @@
-import { ServiceProvider } from '../ServiceProvider'
+import { ServiceProvider } from '../Container/ServiceProvider'
 import {
     HttpServer,
     HttpServerBinding,

@@ -21,7 +21,9 @@ export abstract class Console extends Kernel {
             const command = this.application.make<Command>(Command)
             commander
                 .command(command.command, command.description)
-                .action(command.handle)
+                .action((...args: any[]) =>
+                    command.handle(args[args.length - 1])
+                )
         }
 
         commander.parse(process.argv)

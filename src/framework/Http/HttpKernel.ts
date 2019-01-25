@@ -33,13 +33,20 @@ export abstract class HttpKernel extends Kernel {
             })
         }
 
-        const possibleMethods = ['get', 'post', 'put', 'delete']
+        const possibleMethods = ['get', 'post', 'put', 'delete', 'handle']
 
         for (const Route of this.routes) {
             const route = this.application.make<Route>(Route)
 
             for (const method of possibleMethods) {
                 if (route[method]) {
+                    if (method === 'handle') {
+                        this.router.use(
+                            route.pathname,
+                            route[method].bind(route)
+                        )
+                        continue
+                    }
                     this.router[method](
                         route.pathname,
                         route[method].bind(route)
@@ -54,11 +61,7 @@ export abstract class HttpKernel extends Kernel {
             const method = methodType.toLowerCase()
             if (method in this.server) {
                 for (const handler of handlers) {
-                    if (method === 'use') {
-                        this.server[method](handler.handler)
-                    } else {
-                        this.server[method](handler.pathname, handler.handler)
-                    }
+                    this.server[method](handler.pathname, handler.handler)
                 }
             }
         }
