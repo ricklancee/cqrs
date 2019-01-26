@@ -12,4 +12,12 @@ export class QueueServiceProvider extends ServiceProvider {
             .to(Queue)
             .inSingletonScope()
     }
+
+    public boot() {
+        this.container.get<Queue>(QueueBinding).registerQueues()
+
+        if (this.config.queue.sync) {
+            this.container.get<Queue>(QueueBinding).processQueues()
+        }
+    }
 }

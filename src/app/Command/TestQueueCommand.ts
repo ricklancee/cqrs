@@ -10,6 +10,6 @@ export class TestQueueCommand implements Command {
     constructor(@inject(QueueBinding) private queue: Queue) {}
 
     public handle() {
-        this.queue.queue('mail', { some: 'mail', sick: 420, payload: true })
+        // this.queue.queue('mail', { some: 'mail', sick: 420, payload: true })
     }
 }

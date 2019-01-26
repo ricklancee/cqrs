@@ -80,6 +80,10 @@ export class Application<
             await provider.register()
         }
 
+        for (const provider of this.providers) {
+            await provider.boot()
+        }
+
         const cb = callback
             ? callback
             : () => {

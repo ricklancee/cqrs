@@ -4,6 +4,7 @@ import { AutoBinder } from './AutoBinder'
 
 export interface ProvidesService {
     register(): void | Promise<void>
+    boot(): void | Promise<void>
 }
 
 export interface NewableServiceProvider {
@@ -25,4 +26,12 @@ export abstract class ServiceProvider implements ProvidesService {
     }
 
     public abstract register(): void | Promise<void>
+
+    public boot(): void | Promise<void> {
+        /**
+         * This is a noop.
+         * This method can be implemented by the service provider
+         * to execute some code before the kernel is booted.
+         */
+    }
 }

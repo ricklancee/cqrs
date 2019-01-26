@@ -5,17 +5,24 @@ import { Application } from '../framework/App'
 import { AppKernel } from '../app/AppKernel'
 import { config, ExtendedAppConfig } from './config'
 import { providers } from './providers'
-import { QueueBinding, Queue } from '../framework/Queue/Queue'
+import { MailJob } from '../app/Jobs/MailJob'
 
-const app = new Application<ExtendedAppConfig>(config)
+const app = new Application<ExtendedAppConfig>({
+    ...config,
+    queue: {
+        ...config.queue,
+        sync: true,
+    },
+})
 
 app.register(providers)
 
 app.kernel(AppKernel)
 
-app.boot(() => {
+app.boot(async () => {
     app.log().info('Booted')
-    app.make<Queue>(QueueBinding).processQueues()
+
+    await app.make(MailJob).dispatch({ to: 'rick@lifely.nl' })
 })
 
 export { app }
