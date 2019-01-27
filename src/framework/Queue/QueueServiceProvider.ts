@@ -22,13 +22,14 @@ export class QueueServiceProvider extends ServiceProvider {
         this.container.bind<Command>(ClearQueueCommand).to(ClearQueueCommand)
     }
 
-    public async boot() {
+    public boot() {
         const queue = this.container.get<Queue>(QueueBinding)
 
         queue.registerQueues()
 
         if (this.config.queue.sync) {
-            await queue.processQueues()
+            // this should not be awaited in order to keep the code running
+            queue.processQueues()
         }
     }
 }

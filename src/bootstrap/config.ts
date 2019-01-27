@@ -37,4 +37,11 @@ export const config: Readonly<ExtendedAppConfig> = {
             console: {},
         },
     },
+    database: {
+        database: 'postgres',
+        host: '127.0.0.1',
+        username: 'postgres',
+        password: 'secret',
+        modelPaths: [`${__dirname}/../app/**/*.model.*`],
+    },
 }

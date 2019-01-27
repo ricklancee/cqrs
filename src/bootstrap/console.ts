@@ -15,5 +15,3 @@ app.kernel(ConsoleKerel)
 app.boot(() => {
     app.log().info('Booted')
 })
-
-export { app }

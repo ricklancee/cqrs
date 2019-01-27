@@ -8,6 +8,7 @@
         "ter-arrow-parens": false,
         "whitespace": false,
         "import-name": false,
+        "object-shorthand-properties-first": false,
         "trailing-comma": [
             true,
             {

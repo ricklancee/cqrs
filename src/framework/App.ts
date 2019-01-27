@@ -13,6 +13,12 @@ import { RedisOptions } from './Redis/RedisFactory'
 import { QueueOptions } from './Queue/Queue'
 import { ReporterOptions } from './Exception/Reporter/Reporter'
 import { MailerOptions } from './Mailer/Mailer'
+import {
+    DatabaseOptions,
+    DatabaseManager,
+    DatabaseOptionsBinding,
+    DatabaseManagerBinding,
+} from './Database/DatabaseManager'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -26,6 +32,7 @@ export interface ApplicationConfig {
     readonly queue: QueueOptions
     readonly reporter: ReporterOptions
     readonly mail: MailerOptions
+    readonly database: DatabaseOptions
 }
 
 export const ApplicationConfigBinding = Symbol.for('ApplicationConfigBinding')
@@ -45,6 +52,10 @@ export class Application<
     public log = () => this.container.get<Logger>(LoggerBinding)
     public event = () => this.container.get<EventEmitter>(EventEmitterBinding)
     public router = () => this.container.get<Router>(RouterBinding)
+    public database = () =>
+        this.container
+            .get<DatabaseManager>(DatabaseManagerBinding)
+            .getConnection()
 
     constructor(config: TExtendedAppConfig) {
         this.container = new Container()

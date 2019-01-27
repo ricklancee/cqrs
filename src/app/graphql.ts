@@ -1,10 +1,18 @@
 import { AppError } from '../framework/AppError'
+import { User } from './User.model'
+import { app } from '../bootstrap/app'
 
 export const typeDefs = `
   type Query {
     hello: String
     expectedError: String
     reportedError: String
+    createUser(email: String!): User
+    users: [User]
+  }
+
+  type User {
+      email: String
   }
 `
 
@@ -20,6 +28,12 @@ export const resolvers = {
         },
         reportedError: () => {
             throw new Error('Should be masked!')
+        },
+        users: () => User.findAll(),
+        createUser: async (root, args) => {
+            return User.create({
+                email: args.email,
+            })
         },
     },
 }

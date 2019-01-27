@@ -7,6 +7,7 @@ import { RedisServiceProvider } from '../framework/Redis/RedisServiceProvider'
 import { QueueServiceProvider } from '../framework/Queue/QueueServiceProvider'
 import { ReporterServiceProvider } from '../framework/Exception/Reporter/ReporterServiceProvider'
 import { MailerServiceProvider } from '../framework/Mailer/MailerServiceProvider'
+import { DatabaseServiceProvider } from '../framework/Database/DatabaseServiceProvider'
 
 export const providers = [
     AppServiceProvider,
@@ -17,5 +18,6 @@ export const providers = [
     QueueServiceProvider,
     MailerServiceProvider,
     EventEmitterServiceProvider,
+    DatabaseServiceProvider,
     HttpServerServiceProvider,
 ]
