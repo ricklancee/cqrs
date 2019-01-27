@@ -15,7 +15,7 @@ export abstract class Job<TJobPayload extends object = {}> {
 
     public static schedule?: string = undefined
     public static onQueue: string = 'jobs'
-    public static concurrency: number = 2
+    public static concurrency: number = 1
 
     public async dispatch(payload: TJobPayload): Promise<void> {
         // TOOD: Could possible allow more options here like, delay timeout etc.
