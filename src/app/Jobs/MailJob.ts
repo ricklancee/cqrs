@@ -11,6 +11,6 @@ export class MailJob extends Job<MailJobOptions> {
     public static concurrency = 2
 
     public handle(args: MailJobOptions) {
-        console.log(args)
+        console.log('handling', args)
     }
 }

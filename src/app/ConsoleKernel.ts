@@ -1,8 +1,8 @@
 import { injectable } from 'inversify'
 import { Console } from '../framework/Console/Console'
-import { TestQueueCommand } from './Command/TestQueueCommand'
+import { TestMailCommand } from './Command/TestMailCommand'
 
 @injectable()
 export class ConsoleKerel extends Console {
-    protected commands = [TestQueueCommand]
+    protected commands = [TestMailCommand]
 }

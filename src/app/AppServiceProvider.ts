@@ -1,8 +1,8 @@
 import { ServiceProvider } from '../framework/Container/ServiceProvider'
 
 export class AppServiceProvider extends ServiceProvider {
-    register() {
-        this.autobinder.autobind(__dirname, [
+    async register() {
+        await this.autobinder.autobind(__dirname, [
             `./Command/**/*`,
             `./Jobs/**/*`,
             `./Routes/**/*`,

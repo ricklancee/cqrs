@@ -39,13 +39,17 @@ export class AutoBinder {
      * @param globs
      */
     public autobind(basePath: string, globs: string[]) {
-        for (const glob of globs) {
-            const files = this.getFilesForGlob(basePath, glob)
+        return new Promise(resolve => {
+            for (const glob of globs) {
+                const files = this.getFilesForGlob(basePath, glob)
 
-            for (const file of files) {
-                this.autobindFile(file)
+                for (const file of files) {
+                    this.autobindFile(file)
+                }
             }
-        }
+
+            resolve()
+        })
     }
 
     /**

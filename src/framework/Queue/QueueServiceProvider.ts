@@ -1,5 +1,7 @@
 import { ServiceProvider } from '../Container/ServiceProvider'
 import { QueueOptions, QueueOptionsBinding, Queue, QueueBinding } from './Queue'
+import { ProcessQueueCommand } from './ProcessQueueCommand'
+import { Command } from '../Console/Command'
 
 export class QueueServiceProvider extends ServiceProvider {
     public register() {
@@ -11,6 +13,10 @@ export class QueueServiceProvider extends ServiceProvider {
             .bind<Queue>(QueueBinding)
             .to(Queue)
             .inSingletonScope()
+
+        this.container
+            .bind<Command>(ProcessQueueCommand)
+            .to(ProcessQueueCommand)
     }
 
     public boot() {

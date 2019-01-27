@@ -19,8 +19,8 @@ export interface QueueOptions {
 
 @injectable()
 export class Queue {
-    private client: RedisClient = this.redisFactory.createClient()
-    private subscriber: RedisClient = this.redisFactory.createClient()
+    private client: RedisClient
+    private subscriber: RedisClient
 
     private queues = new Map<string, BullQueue.Queue>()
 

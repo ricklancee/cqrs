@@ -6,6 +6,7 @@
     "scripts": {
         "start-services": "docker-compose --project-name=cqrs up",
         "watch:ts": "tsc -w",
+        "build": "rm -rf dist/ && tsc",
         "start:debug": "nodemon --inspect ./dist/bootstrap/app.js",
         "start": "rm -rf dist/ && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch:ts\" \"npm run start:debug\"",
         "cli": "node ./dist/bootstrap/console.js",
@@ -22,6 +23,7 @@
         "@types/helmet": "0.0.42",
         "@types/ioredis": "^4.0.6",
         "@types/node": "^10.12.18",
+        "bull-arena": "^2.5.2",
         "concurrently": "^4.1.0",
         "nodemon": "^1.18.9",
         "prettier": "^1.15.3",
