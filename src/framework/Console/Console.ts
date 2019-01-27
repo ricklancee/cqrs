@@ -8,8 +8,6 @@ import { ProcessQueueCommand } from '../Queue/ProcessQueueCommand'
 
 @injectable()
 export abstract class Console extends Kernel {
-    private version: string = '0.0.1'
-
     private defaultCommands: Newable<Command>[] = [ProcessQueueCommand]
 
     protected commands: Newable<Command>[] = []
@@ -18,7 +16,7 @@ export abstract class Console extends Kernel {
     protected application: Application
 
     public boot() {
-        commander.version(this.version)
+        commander.version(this.application.version)
 
         const commands = [...this.defaultCommands, ...this.commands]
 

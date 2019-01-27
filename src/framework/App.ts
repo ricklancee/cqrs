@@ -33,6 +33,8 @@ type MakeFN = <T>(serviceIdentifier: interfaces.ServiceIdentifier<T>) => T
 export class Application<
     TExtendedAppConfig extends ApplicationConfig = ApplicationConfig
 > {
+    public readonly version: string = '0.1.0'
+
     private readonly container: Container
     private readonly providers = new Set<ProvidesService>()
 
