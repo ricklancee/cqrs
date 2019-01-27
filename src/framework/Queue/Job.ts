@@ -18,7 +18,7 @@ export abstract class Job<TJobPayload extends object = {}> {
     public static concurrency: number = 2
 
     public async dispatch(payload: TJobPayload): Promise<void> {
-        // Could possible add more options here like, delay timeout etc.
+        // TOOD: Could possible allow more options here like, delay timeout etc.
         await this.queue.add((this.constructor as NewableJob).onQueue, payload)
     }
 

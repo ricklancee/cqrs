@@ -64,12 +64,23 @@ export class Queue {
                     queueStatic.onQueue
                 }" with concurrency "${queueStatic.concurrency}"`
             )
-            queue.process(
-                queueStatic.concurrency || 1,
-                async (bullJob: BullQueue.Job) => {
-                    await job.handle(bullJob.data)
-                }
-            )
+
+            if (!queueStatic.schedule) {
+                queue.process(
+                    queueStatic.concurrency || 1,
+                    async (bullJob: BullQueue.Job) => {
+                        await job.handle(bullJob.data)
+                    }
+                )
+            } else {
+                queue.process(
+                    queueStatic.name,
+                    queueStatic.concurrency || 1,
+                    async (bullJob: BullQueue.Job) => {
+                        await job.handle(bullJob.data)
+                    }
+                )
+            }
         }
 
         await this.registerScheduledJobs()
@@ -138,7 +149,8 @@ export class Queue {
                     }"...`
                 )
 
-                queue.removeRepeatable(queueStatic.name, {
+                await queue.removeRepeatable(queueStatic.name, {
+                    jobId: staleJob.id,
                     cron: staleJob.cron,
                 })
             }
