@@ -1,5 +1,6 @@
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
 import { Job } from '../../framework/Queue/Job'
+import { MailerBinding, Mailer } from '../../framework/Mailer/Mailer'
 
 interface MailJobOptions {
     to: string
@@ -10,12 +11,13 @@ export class MailJob extends Job<MailJobOptions> {
     public static onQueue = 'mail'
     public static concurrency = 2
 
-    public handle(args: MailJobOptions) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                console.log('send mails!', args)
-                resolve()
-            }, 2000)
+    constructor(@inject(MailerBinding) private mailer: Mailer) {
+        super()
+    }
+
+    public async handle(args: MailJobOptions) {
+        await this.mailer.send({
+            to: args.to,
         })
     }
 }

@@ -197,10 +197,7 @@ export class Queue {
                               job.id
                           }" has failed; Attempts: "${job.attemptsMade}"`
                         : error.message
-                }`,
-                {
-                    error,
-                }
+                }`
             )
             await this.exceptionHandler.report(error)
         })
@@ -222,10 +219,7 @@ export class Queue {
             this.logger.error(
                 `[queue:${queueName}] Job with id "${
                     job.id
-                }" has failed; Attempts: "${job.attemptsMade}"`,
-                {
-                    error,
-                }
+                }" has failed; Attempts: "${job.attemptsMade}"`
             )
             await this.exceptionHandler.report(error)
         })

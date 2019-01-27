@@ -12,6 +12,7 @@ import { Router, RouterBinding } from './Http/Router'
 import { RedisOptions } from './Redis/RedisFactory'
 import { QueueOptions } from './Queue/Queue'
 import { ReporterOptions } from './Exception/Reporter/Reporter'
+import { MailerOptions } from './Mailer/Mailer'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -24,6 +25,7 @@ export interface ApplicationConfig {
     readonly redis: RedisOptions
     readonly queue: QueueOptions
     readonly reporter: ReporterOptions
+    readonly mail: MailerOptions
 }
 
 export const ApplicationConfigBinding = Symbol.for('ApplicationConfigBinding')

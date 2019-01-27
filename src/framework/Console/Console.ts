@@ -34,6 +34,7 @@ export abstract class Console extends Kernel {
                         `Running command "${CommandStatic.name}"...`
                     )
 
+                    // TODO: pass through command arguments and options
                     await command.handle()
 
                     this.logger.debug(

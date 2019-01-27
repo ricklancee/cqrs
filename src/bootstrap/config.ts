@@ -21,14 +21,21 @@ export const config: Readonly<ExtendedAppConfig> = {
     },
     reporter: {
         environment: ApplicationEnvironment.development,
-        default: 'sentry',
-        services: {
+        adapter: 'console',
+        adapters: {
             sentry: {
                 dsn: 'dadada',
             },
             console: {
                 prefix: '⚠️🙅‍',
             },
+        },
+    },
+    mail: {
+        adapter: 'nodeMailer',
+        adapters: {
+            nodeMailer: {},
+            console: {},
         },
     },
 }

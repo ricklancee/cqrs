@@ -1,13 +1,13 @@
 import { SentryReporterOptions } from './SentryReporter'
 import { ConsoleReporterOptions } from './ConsoleReporter'
 
-export const ReporterBinding = Symbol.for('Reporter')
+export const ReporterBinding = Symbol.for('ReporterBinding')
 export const ReporterOptionsBinding = Symbol.for('ReporterOptionsBinding')
 
 export interface ReporterOptions {
     environment: string
-    default: keyof ReporterOptions['services']
-    services: {
+    adapter: keyof ReporterOptions['adapters']
+    adapters: {
         sentry: SentryReporterOptions
         console: ConsoleReporterOptions
     }
