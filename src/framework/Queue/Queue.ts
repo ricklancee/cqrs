@@ -8,6 +8,10 @@ import {
 import { Job, NewableJob } from './Job'
 import { LoggerBinding, Logger } from '../Logger/Logger'
 import { AppBinding, Application } from '../App'
+import {
+    ExceptionHandlerBinding,
+    ExceptionHandler,
+} from '../Exception/ExceptionHandler'
 
 export const QueueBinding = Symbol.for('QueueBinding')
 export const QueueOptionsBinding = Symbol.for('QueueOptionsBinding')
@@ -25,9 +29,7 @@ export class Queue {
     private queues = new Map<string, BullQueue.Queue>()
 
     private globalOptions = {
-        defaultJobOptions: {
-            removeOnComplete: true,
-        },
+        defaultJobOptions: {},
         createClient: (type: string) => {
             switch (type) {
                 case 'client':
@@ -44,13 +46,15 @@ export class Queue {
         @inject(QueueOptionsBinding) private options: QueueOptions,
         @inject(AppBinding) private app: Application,
         @inject(RedisFactoryBinding) private redisFactory: RedisFactory,
-        @inject(LoggerBinding) private logger: Logger
+        @inject(LoggerBinding) private logger: Logger,
+        @inject(ExceptionHandlerBinding)
+        private exceptionHandler: ExceptionHandler
     ) {
         this.client = this.redisFactory.createClient()
         this.subscriber = this.redisFactory.createClient()
     }
 
-    public processQueues() {
+    public async processQueues() {
         for (const queueStatic of this.options.jobs) {
             const queue = this.getQueue(queueStatic.onQueue)
             const job = this.app.make<Job>(queueStatic)
@@ -67,6 +71,8 @@ export class Queue {
                 }
             )
         }
+
+        await this.registerScheduledJobs()
     }
 
     public registerQueues() {
@@ -76,10 +82,11 @@ export class Queue {
                     queueStatic.onQueue
                 }"...`
             )
-            this.queues.set(
-                queueStatic.onQueue,
-                new BullQueue(queueStatic.onQueue, this.globalOptions)
-            )
+
+            const queue = new BullQueue(queueStatic.onQueue, this.globalOptions)
+            this.registerEventHandlersForQueue(queue)
+
+            this.queues.set(queueStatic.onQueue, queue)
         }
     }
 
@@ -99,6 +106,59 @@ export class Queue {
         await this.getQueue(onQueue).add(payload, jobOptions)
     }
 
+    public async clear() {
+        for (const [name, queue] of this.queues) {
+            await queue.empty()
+        }
+    }
+
+    private async registerScheduledJobs() {
+        for (const queueStatic of this.options.jobs) {
+            if (!queueStatic.schedule) {
+                continue
+            }
+
+            const queue = this.getQueue(queueStatic.onQueue)
+
+            const jobs = await queue.getRepeatableJobs()
+
+            const oldScheduledJobs = jobs.filter(
+                job =>
+                    job.name === queueStatic.name &&
+                    job.cron !== queueStatic.schedule
+            )
+
+            // remove old job
+            for (const staleJob of oldScheduledJobs) {
+                this.logger.debug(
+                    `Removing old repeatable job "${
+                        staleJob.name
+                    }" with schedule "${staleJob.cron}" from queue "${
+                        queueStatic.onQueue
+                    }"...`
+                )
+
+                queue.removeRepeatable(queueStatic.name, {
+                    cron: staleJob.cron,
+                })
+            }
+
+            this.logger.debug(
+                `Adding "${queueStatic.name}" schedule "${
+                    queueStatic.schedule
+                }" on queue "${queueStatic.onQueue}"...`
+            )
+
+            await queue.add(
+                queueStatic.name,
+                {}, // a scheduled job does not need any payload
+                {
+                    repeat: { cron: queueStatic.schedule },
+                }
+            )
+        }
+    }
+
     private getQueue(name: string) {
         if (!this.queues.has(name)) {
             throw new Error(
@@ -109,5 +169,75 @@ export class Queue {
         }
 
         return this.queues.get(name)
+    }
+
+    private registerEventHandlersForQueue(queue: BullQueue.Queue) {
+        const queueName = queue.name
+
+        queue.on('error', async (job, error) => {
+            this.logger.error(
+                `[queue:${queueName}] ${
+                    job
+                        ? `An error occured on job with id "${
+                              job.id
+                          }" has failed; Attempts: "${job.attemptsMade}"`
+                        : error.message
+                }`,
+                {
+                    error,
+                }
+            )
+            await this.exceptionHandler.report(error)
+        })
+
+        queue.on('active', job => {
+            this.logger.debug(
+                `[queue:${queueName}] Job with id "${job.id}" has started`
+            )
+        })
+
+        queue.on('completed', job => {
+            this.logger.debug(
+                `[queue:${queueName}] Job with id "${job.id}" has completed`
+            )
+        })
+
+        // A job has failed
+        queue.on('failed', async (job, error) => {
+            this.logger.error(
+                `[queue:${queueName}] Job with id "${
+                    job.id
+                }" has failed; Attempts: "${job.attemptsMade}"`,
+                {
+                    error,
+                }
+            )
+            await this.exceptionHandler.report(error)
+        })
+
+        // A job has been marked as stalled. This is useful for debugging job
+        // workers that crash or pause the event loop.
+        queue.on('stalled', job => {
+            this.logger.warn(
+                `[queue:${queueName}] job with id "${job.id}" has stalled`
+            )
+        })
+
+        // The queue has been paused.
+        queue.on('paused', () => {
+            this.logger.info(`[queue:${queueName}] The queue has been paused`)
+        })
+
+        // The queue has been resumed.
+        queue.on('resumed', () => {
+            this.logger.info(`[queue:${queueName}] The queue has been resumed`)
+        })
+
+        // The queue has been cleaned.
+        queue.on('cleaned', (job, type) => {
+            this.logger.info(
+                `[queue:${queueName}] Cleaned ${job.length} ${type} jobs'`
+            )
+        })
     }
 }

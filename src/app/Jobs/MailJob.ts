@@ -11,6 +11,11 @@ export class MailJob extends Job<MailJobOptions> {
     public static concurrency = 2
 
     public handle(args: MailJobOptions) {
-        console.log('handling', args)
+        return new Promise(resolve => {
+            setTimeout(() => {
+                console.log('send mails!', args)
+                resolve()
+            }, 2000)
+        })
     }
 }

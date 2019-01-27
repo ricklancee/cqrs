@@ -53,6 +53,9 @@ export abstract class Kernel implements Boots {
 
     private handleException = async (error: Error) => {
         await this.exceptionHandler.report(error)
+        this.logger.error(
+            `UncaughtException or UnhandledRejection ocurred, shutting down program...`
+        )
         process.exit()
     }
 }

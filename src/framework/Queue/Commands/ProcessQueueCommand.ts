@@ -1,6 +1,6 @@
-import { Command } from '../../framework/Console/Command'
+import { Command } from '../../Console/Command'
 import { injectable, inject } from 'inversify'
-import { QueueBinding, Queue } from './Queue'
+import { QueueBinding, Queue } from '../Queue'
 
 @injectable()
 export class ProcessQueueCommand implements Command {
@@ -10,7 +10,7 @@ export class ProcessQueueCommand implements Command {
 
     constructor(@inject(QueueBinding) private queue: Queue) {}
 
-    public handle() {
-        this.queue.processQueues()
+    public async handle() {
+        await this.queue.processQueues()
     }
 }

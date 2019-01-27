@@ -1,5 +1,6 @@
 import { ApplicationConfig, ApplicationEnvironment } from '../framework/App'
 import { MailJob } from '../app/Jobs/MailJob'
+import { ScheduledJob } from '../app/Jobs/ScheduledJob'
 
 export interface ExtendedAppConfig extends ApplicationConfig {}
 
@@ -16,6 +17,6 @@ export const config: Readonly<ExtendedAppConfig> = {
         db: 0,
     },
     queue: {
-        jobs: [MailJob],
+        jobs: [ScheduledJob, MailJob],
     },
 }

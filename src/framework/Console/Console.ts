@@ -4,11 +4,15 @@ import commander from 'commander'
 import { Newable } from '../Newable'
 import { AppBinding, Application } from '../App'
 import { Command } from './Command'
-import { ProcessQueueCommand } from '../Queue/ProcessQueueCommand'
+import { ProcessQueueCommand } from '../Queue/Commands/ProcessQueueCommand'
+import { ClearQueueCommand } from '../Queue/Commands/ClearQueueCommand'
 
 @injectable()
 export abstract class Console extends Kernel {
-    private defaultCommands: Newable<Command>[] = [ProcessQueueCommand]
+    private defaultCommands: Newable<Command>[] = [
+        ProcessQueueCommand,
+        ClearQueueCommand,
+    ]
 
     protected commands: Newable<Command>[] = []
 
