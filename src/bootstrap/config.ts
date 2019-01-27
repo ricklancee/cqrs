@@ -31,7 +31,7 @@ export const config: Readonly<ExtendedAppConfig> = {
         },
     },
     mail: {
-        adapter: 'nodeMailer',
+        adapter: 'console',
         adapters: {
             nodeMailer: {},
             console: {},

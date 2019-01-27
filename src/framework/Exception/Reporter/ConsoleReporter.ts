@@ -14,9 +14,7 @@ export class ConsoleReporter implements Reporter {
     constructor(
         @inject(ConsoleReporterOptionsBinding)
         private options: ConsoleReporterOptions
-    ) {
-        console.log('TODO: INIT console with options', this.options)
-    }
+    ) {}
 
     public async reportError(error: Error) {
         console.log(`${this.options.prefix} ${error.message} 😱`)

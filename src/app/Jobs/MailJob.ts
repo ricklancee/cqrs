@@ -9,7 +9,6 @@ interface MailJobOptions {
 @injectable()
 export class MailJob extends Job<MailJobOptions> {
     public static onQueue = 'mail'
-    public static concurrency = 2
 
     constructor(@inject(MailerBinding) private mailer: Mailer) {
         super()
