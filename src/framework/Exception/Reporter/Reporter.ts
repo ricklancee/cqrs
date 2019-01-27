@@ -5,7 +5,6 @@ export const ReporterBinding = Symbol.for('ReporterBinding')
 export const ReporterOptionsBinding = Symbol.for('ReporterOptionsBinding')
 
 export interface ReporterOptions {
-    environment: string
     adapter: keyof ReporterOptions['adapters']
     adapters: {
         sentry: SentryReporterOptions

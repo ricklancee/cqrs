@@ -1,5 +1,7 @@
 import { injectable, inject } from 'inversify'
 import { Reporter } from './Reporter'
+import * as Sentry from '@sentry/node'
+import { ApplicationConfigBinding, ApplicationConfig } from '../../App'
 
 export interface SentryReporterOptions {
     dsn: string
@@ -14,12 +16,24 @@ export const SentryReporterOptionsBinding = Symbol.for('SentryReporterOptions')
 @injectable()
 export class SentryReporter implements Reporter {
     constructor(
-        @inject(SentryReporterOptionsBinding) options: SentryReporterOptions
+        @inject(SentryReporterOptionsBinding) options: SentryReporterOptions,
+        @inject(ApplicationConfigBinding) appConfig: ApplicationConfig
     ) {
-        console.log('TODO: INIT sentry with options', options)
+        Sentry.init({
+            environment: appConfig.env,
+            ...options,
+        })
     }
 
-    public async reportError(error: Error) {}
+    public async reportError(error: Error) {
+        await Sentry.withScope(async scope => {
+            await Sentry.captureException(error)
+        })
+    }
 
-    public async reportMessage(message: string) {}
+    public async reportMessage(message: string) {
+        await Sentry.withScope(async scope => {
+            await Sentry.captureMessage(message)
+        })
+    }
 }

@@ -20,7 +20,6 @@ export const config: Readonly<ExtendedAppConfig> = {
         jobs: [ScheduledJob, MailJob],
     },
     reporter: {
-        environment: ApplicationEnvironment.development,
         adapter: 'console',
         adapters: {
             sentry: {
