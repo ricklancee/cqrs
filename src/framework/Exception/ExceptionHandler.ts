@@ -1,5 +1,6 @@
-import { injectable, inject } from 'inversify'
+import { injectable, inject, named } from 'inversify'
 import { LoggerBinding, Logger } from '../Logger/Logger'
+import { ReporterBinding, Reporter } from './Reporter/Reporter'
 
 type ErrorCallback = (error: Error) => void
 
@@ -7,10 +8,14 @@ type ErrorCallback = (error: Error) => void
 export class ExceptionHandler {
     private callbacks = new Set<ErrorCallback>()
 
-    constructor(@inject(LoggerBinding) private logger: Logger) {}
+    constructor(
+        @inject(LoggerBinding) private logger: Logger,
+        @inject(ReporterBinding) private reporter: Reporter
+    ) {}
 
     public async report(error: Error): Promise<void> {
-        this.logger.error(error.stack)
+        await this.logger.error(error.stack)
+        await this.reporter.reportError(error)
 
         for (const callback of this.callbacks) {
             await callback(error)

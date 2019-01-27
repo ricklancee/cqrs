@@ -5,7 +5,6 @@ import { Application } from '../framework/App'
 import { AppKernel } from '../app/AppKernel'
 import { config, ExtendedAppConfig } from './config'
 import { providers } from './providers'
-import { MailJob } from '../app/Jobs/MailJob'
 
 const app = new Application<ExtendedAppConfig>({
     ...config,
@@ -21,8 +20,6 @@ app.kernel(AppKernel)
 
 app.boot(async () => {
     app.log().info('Booted')
-
-    await app.make(MailJob).dispatch({ to: 'rick@lifely.nl' })
 })
 
 export { app }

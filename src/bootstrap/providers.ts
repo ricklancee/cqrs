@@ -5,11 +5,13 @@ import { EventEmitterServiceProvider } from '../framework/EventEmitter/EventEmit
 import { HttpServerServiceProvider } from '../framework/Http/HttpServerServiceProvider'
 import { RedisServiceProvider } from '../framework/Redis/RedisServiceProvider'
 import { QueueServiceProvider } from '../framework/Queue/QueueServiceProvider'
+import { ReporterServiceProvider } from '../framework/Exception/Reporter/ReporterServiceProvider'
 
 export const providers = [
     AppServiceProvider,
     ExceptionServiceProvider,
     LoggerServiceProvider,
+    ReporterServiceProvider,
     RedisServiceProvider,
     QueueServiceProvider,
     EventEmitterServiceProvider,

@@ -11,6 +11,7 @@ import { EventEmitterBinding, EventEmitter } from './EventEmitter/EventEmitter'
 import { Router, RouterBinding } from './Http/Router'
 import { RedisOptions } from './Redis/RedisFactory'
 import { QueueOptions } from './Queue/Queue'
+import { ReporterOptions } from './Exception/Reporter/Reporter'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -22,6 +23,7 @@ export interface ApplicationConfig {
     readonly http: HttpServerOptions
     readonly redis: RedisOptions
     readonly queue: QueueOptions
+    readonly reporter: ReporterOptions
 }
 
 export const ApplicationConfigBinding = Symbol.for('ApplicationConfigBinding')

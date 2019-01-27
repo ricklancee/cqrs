@@ -19,4 +19,16 @@ export const config: Readonly<ExtendedAppConfig> = {
     queue: {
         jobs: [ScheduledJob, MailJob],
     },
+    reporter: {
+        environment: ApplicationEnvironment.development,
+        default: 'sentry',
+        services: {
+            sentry: {
+                dsn: 'dadada',
+            },
+            console: {
+                prefix: '⚠️🙅‍',
+            },
+        },
+    },
 }
