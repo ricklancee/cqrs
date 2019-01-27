@@ -36,21 +36,11 @@ export abstract class Console extends Kernel {
 
                     await command.handle()
 
-                    if (command.keepAlive) {
-                        this.logger.debug(
-                            `Command "${
-                                command.constructor.name
-                            }" finished, but being kept alive because keepAlive option is true`
-                        )
-                        process.stdout.resume()
-                    } else {
-                        this.logger.debug(
-                            `Command "${
-                                command.constructor.name
-                            }" ran sucessfully`
-                        )
-                        process.exit()
-                    }
+                    this.logger.debug(
+                        `Command "${command.constructor.name}" ran sucessfully`
+                    )
+
+                    process.exit()
                 })
         }
 

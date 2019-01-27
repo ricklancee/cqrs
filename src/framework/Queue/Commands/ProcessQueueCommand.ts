@@ -6,7 +6,6 @@ import { QueueBinding, Queue } from '../Queue'
 export class ProcessQueueCommand implements Command {
     public command = 'queue:work'
     public description = 'Start processing the queue'
-    public keepAlive: boolean = true
 
     constructor(@inject(QueueBinding) private queue: Queue) {}
 
