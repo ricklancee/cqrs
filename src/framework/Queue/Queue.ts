@@ -31,6 +31,7 @@ export class Queue {
     private globalOptions = {
         defaultJobOptions: {},
         createClient: (type: string) => {
+            // This reduces the total amount of connections to redis.
             switch (type) {
                 case 'client':
                     return this.client
@@ -55,6 +56,8 @@ export class Queue {
     }
 
     public async processQueues() {
+        const processes = []
+
         for (const queueStatic of this.options.jobs) {
             const queue = this.getQueue(queueStatic.onQueue)
             const job = this.app.make<Job>(queueStatic)
@@ -65,25 +68,25 @@ export class Queue {
                 }" with concurrency "${queueStatic.concurrency}"`
             )
 
-            if (!queueStatic.schedule) {
-                queue.process(
-                    queueStatic.concurrency || 1,
-                    async (bullJob: BullQueue.Job) => {
-                        await job.handle(bullJob.data)
-                    }
+            const concurrency = queueStatic.concurrency || 1
+            const handler = async (bullJob: BullQueue.Job) => {
+                await job.handle(bullJob.data)
+            }
+
+            if (queueStatic.schedule) {
+                processes.push(
+                    queue.process(queueStatic.name, concurrency, handler)
                 )
             } else {
-                queue.process(
-                    queueStatic.name,
-                    queueStatic.concurrency || 1,
-                    async (bullJob: BullQueue.Job) => {
-                        await job.handle(bullJob.data)
-                    }
-                )
+                processes.push(queue.process(concurrency, handler))
             }
         }
 
-        await this.registerScheduledJobs()
+        await this.addScheduledJobsToQueue()
+
+        // queue.process returns a promise, we want to await these all
+        // to avoid these not getting resolved
+        await Promise.all(processes)
     }
 
     public registerQueues() {
@@ -123,7 +126,7 @@ export class Queue {
         }
     }
 
-    private async registerScheduledJobs() {
+    private async addScheduledJobsToQueue() {
         for (const queueStatic of this.options.jobs) {
             if (!queueStatic.schedule) {
                 continue
