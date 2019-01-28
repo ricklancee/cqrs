@@ -9,7 +9,7 @@ import { RouterBinding, Router } from './Router'
 import { Route } from './Route'
 
 @injectable()
-export abstract class HttpKernel extends Kernel {
+export abstract class Http extends Kernel {
     @inject(HttpServerBinding)
     private server: HttpServer
 

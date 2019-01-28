@@ -1,4 +1,4 @@
-import { HttpKernel } from '../framework/Http/HttpKernel'
+import { Http } from '../framework/Http/Http'
 import { injectable } from 'inversify'
 import { SecurityHeadersMiddleware } from '../framework/Http/Middleware/SecurityHeadersMiddleware'
 import { CorsMiddleware } from '../framework/Http/Middleware/CorsMiddleware'
@@ -7,7 +7,7 @@ import { HttpMiddleware } from '../framework/Http/HttpMiddleware'
 import { GraphQLRoute } from './Routes/GraphQLRoute'
 
 @injectable()
-export class AppKernel extends HttpKernel {
+export class HttpKernel extends Http {
     protected middleware: Newable<HttpMiddleware>[] = [
         CorsMiddleware,
         SecurityHeadersMiddleware,
