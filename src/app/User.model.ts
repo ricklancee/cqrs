@@ -1,9 +1,18 @@
 import { Table, Column, Model } from 'sequelize-typescript'
-import { IDefineOptions } from 'sequelize-typescript/lib/interfaces/IDefineOptions'
-import sequelize = require('sequelize')
+import sequelize from 'sequelize'
 
-@Table
+@Table({ timestamps: true, paranoid: true })
 export class User extends Model<User> {
+    @Column({
+        primaryKey: true,
+        type: sequelize.UUID,
+        defaultValue: sequelize.UUIDV4,
+    })
+    public id: string
+
     @Column(sequelize.STRING)
     public email: string
+
+    @Column(sequelize.STRING)
+    public name: string
 }
