@@ -19,6 +19,7 @@ import {
     DatabaseOptionsBinding,
     DatabaseManagerBinding,
 } from './Database/DatabaseManager'
+import { FilesystemOptions } from './Filesystem/FileSystem'
 
 export const enum ApplicationEnvironment {
     development = 'DEVELOPMENT',
@@ -33,6 +34,7 @@ export interface ApplicationConfig {
     readonly reporter: ReporterOptions
     readonly mail: MailerOptions
     readonly database: DatabaseOptions
+    readonly filesystem: FilesystemOptions
 }
 
 export const ApplicationConfigBinding = Symbol.for('ApplicationConfigBinding')

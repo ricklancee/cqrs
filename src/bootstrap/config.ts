@@ -44,4 +44,12 @@ export const config: Readonly<ExtendedAppConfig> = {
         password: 'secret',
         modelPaths: [`${__dirname}/../app/**/*.model.*`],
     },
+    filesystem: {
+        adapter: 'disk',
+        adapters: {
+            disk: {
+                basePath: `${__dirname}/../storage`,
+            },
+        },
+    },
 }
