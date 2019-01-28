@@ -25,13 +25,13 @@ export abstract class Kernel implements Boots {
         this.registerExitEvents()
     }
 
-    public abstract boot(callback: BootCallback)
+    public abstract boot(callback: BootCallback): void
 
     protected onExit(signal: string): Promise<void> | void {
         /** noop */
     }
 
-    public report(error: Error) {}
+    public onError(error: Error) {}
 
     private async handleShutDown(signal: string) {
         this.logger.info(`Recieved [${signal}] shutting down program...`)
@@ -48,7 +48,7 @@ export abstract class Kernel implements Boots {
     private registerErrorEvents() {
         process.on('uncaughtException', this.handleException)
         process.on('unhandledRejection', this.handleException)
-        this.exceptionHandler.onError(error => this.report(error))
+        this.exceptionHandler.onError(error => this.onError(error))
     }
 
     private handleException = async (error: Error) => {
@@ -56,6 +56,7 @@ export abstract class Kernel implements Boots {
         this.logger.error(
             `UncaughtException or UnhandledRejection ocurred, shutting down program...`
         )
-        process.exit()
+        // Exit with an error
+        process.exit(1)
     }
 }
