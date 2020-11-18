@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start-services": "docker-compose --project-name=cqrs up",
+        "start-services": "docker-compose --project-name=poc-node-framework up",
         "watch:ts": "tsc -w",
         "build": "rm -rf dist/ && tsc",
         "start:debug": "nodemon --inspect ./dist/bootstrap/app.js",
